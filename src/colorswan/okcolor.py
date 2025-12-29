@@ -42,7 +42,8 @@ class OkColor:
             raise ValueError("Hex string must be 6 characters (e.g., #FF0000)")
         return tuple(int(hex_str[i:i + 2], 16) / 255.0 for i in (0, 2, 4))
 
-    def convert(self, color_input):
+    @staticmethod
+    def convert(color_input):
         """
         Main entry point. Accepts:
         - Hex String: "#ffffff" or "ffffff"
@@ -52,29 +53,29 @@ class OkColor:
         """
         # 1. Parse Input & Normalize to 0-1
         if isinstance(color_input, str):
-            r, g, b = self._parse_hex(color_input)
+            r, g, b = OkColor._parse_hex(color_input)
         elif isinstance(color_input, (tuple, list)):
             r, g, b = [c / 255.0 for c in color_input]
         else:
             raise ValueError("Invalid input format. Use Hex string or RGB tuple.")
 
         # 2. Linearize sRGB (EOTF)
-        r_lin = self._linearize_srgb(r)
-        g_lin = self._linearize_srgb(g)
-        b_lin = self._linearize_srgb(b)
+        r_lin = OkColor._linearize_srgb(r)
+        g_lin = OkColor._linearize_srgb(g)
+        b_lin = OkColor._linearize_srgb(b)
         rgb_lin_vector = [r_lin, g_lin, b_lin]
 
         # 3. Linear RGB -> XYZ
-        xyz = self._multiply_matrix_vector(M_RGB_XYZ, rgb_lin_vector)
+        xyz = OkColor._multiply_matrix_vector(M_RGB_XYZ, rgb_lin_vector)
 
         # 4. XYZ -> LMS (Cone Response)
-        lms = self._multiply_matrix_vector(M_XYZ_LMS, xyz)
+        lms = OkColor._multiply_matrix_vector(M_XYZ_LMS, xyz)
 
         # 5. Non-Linear Compression (Cube Root)
-        lms_prime = [self._cbrt(c) for c in lms]
+        lms_prime = [OkColor._cbrt(c) for c in lms]
 
         # 6. LMS -> Oklab (Decorrelation)
-        l_ok, a_ok, b_ok = self._multiply_matrix_vector(M_LMS_OKLAB, lms_prime)
+        l_ok, a_ok, b_ok = OkColor._multiply_matrix_vector(M_LMS_OKLAB, lms_prime)
 
         # 7. Oklab -> Oklch (Polar conversion)
         chroma = math.sqrt(a_ok ** 2 + b_ok ** 2)
