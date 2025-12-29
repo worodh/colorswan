@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "colorswan"
-version = "0.0.2"
-description = "A new pip-installable library"
+version = "0.0.3"
+description = "Precision color conversion library (sRGB to Oklab/Oklch)"
 readme = "README.md"
 authors = [
   { name = "Worod Haiadry", email = "worod.h@gmail.com" },
