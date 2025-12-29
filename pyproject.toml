@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "colorswan"
-version = "0.0.1"
+version = "0.0.2"
 description = "A new pip-installable library"
 readme = "README.md"
 authors = [
-  { name = "User", email = "user@example.com" },
+  { name = "Worod Haiadry", email = "worod.h@gmail.com" },
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -19,4 +19,4 @@ requires-python = ">=3.7"
 dependencies = []
 
 [project.urls]
-"Homepage" = "https://github.com/example/colorswan"
+"Homepage" = "https://github.com/worodh/colorswan"
