@@ -1,6 +1,6 @@
 import math
 
-from ..colorswan.constants import M_RGB_XYZ, M_XYZ_LMS, M_LMS_OKLAB
+from .constants import M_RGB_XYZ, M_XYZ_LMS, M_LMS_OKLAB
 
 
 class OkColor:
