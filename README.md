@@ -24,9 +24,12 @@ result = converter.convert("#FF0000") # Red
 print(result)
 # Output:
 # {
-#   'oklab': {'L': 0.6279..., 'a': 0.2248..., 'b': 0.1258...},
-#   'oklch': {'L': 0.6279..., 'C': 0.2576..., 'h': 29.233...}
+#   'oklab': Oklab(L=0.6279..., a=0.2248..., b=0.1258...),
+#   'oklch': Oklch(L=0.6279..., C=0.2576..., h=29.233...)
 # }
+
+# Access properties
+print(result['oklab'].L)  # 0.6279...
 ```
 
 ### Tuple Input
@@ -36,8 +39,8 @@ You can also pass RGB tuples (0-255).
 ```python
 # Convert from RGB Tuple
 white = converter.convert((255, 255, 255))
-print(white['oklab'])
-# {'L': 1.0, 'a': 0.0, 'b': 0.0}
+print(white['oklab'].L)
+# 1.0
 ```
 
 ### Using Constants

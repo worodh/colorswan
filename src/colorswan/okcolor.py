@@ -1,6 +1,37 @@
 import math
+from dataclasses import dataclass
 
 from .constants import M_RGB_XYZ, M_XYZ_LMS, M_LMS_OKLAB
+
+
+@dataclass
+class Oklab:
+    """
+    Represents a color in the Oklab color space (perceptually uniform).
+    
+    Attributes:
+        L (float): Lightness (0.0 to 1.0).
+        a (float): Green-Red component (approx -0.4 to 0.4).
+        b (float): Blue-Yellow component (approx -0.4 to 0.4).
+    """
+    L: float
+    a: float
+    b: float
+
+
+@dataclass
+class Oklch:
+    """
+    Represents a color in the Oklch color space (cylindrical form of Oklab).
+
+    Attributes:
+        L (float): Lightness (0.0 to 1.0).
+        C (float): Chroma (0.0 upwards).
+        h (float): Hue (0.0 to 360.0 degrees).
+    """
+    L: float
+    C: float
+    h: float
 
 
 class OkColor:
@@ -49,7 +80,7 @@ class OkColor:
         - Hex String: "#ffffff" or "ffffff"
         - RGB Tuple (0-255): (255, 0, 0)
 
-        Returns a dictionary with 'oklab' and 'oklch' coordinates.
+        Returns a dictionary with 'oklab' (Oklab object) and 'oklch' (Oklch object).
         """
         # 1. Parse Input & Normalize to 0-1
         if isinstance(color_input, str):
@@ -86,7 +117,7 @@ class OkColor:
             hue += 360
 
         return {
-            "oklab": {"L": l_ok, "a": a_ok, "b": b_ok},
-            "oklch": {"L": l_ok, "C": chroma, "h": hue}
+            "oklab": Oklab(l_ok, a_ok, b_ok),
+            "oklch": Oklch(l_ok, chroma, hue)
         }
 
