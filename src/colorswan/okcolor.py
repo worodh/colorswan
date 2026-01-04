@@ -74,14 +74,22 @@ class OkColor:
         return tuple(int(hex_str[i:i + 2], 16) / 255.0 for i in (0, 2, 4))
 
     @staticmethod
-    def convert(color_input):
+    def convert(color_input, return_type="oklab"):
         """
         Main entry point. Accepts:
         - Hex String: "#ffffff" or "ffffff"
         - RGB Tuple (0-255): (255, 0, 0)
+        - return_type: "oklab" (default), "oklch", or "all".
 
-        Returns a dictionary with 'oklab' (Oklab object) and 'oklch' (Oklch object).
+        Returns:
+            - Oklab object (if return_type="oklab")
+            - Oklch object (if return_type="oklch")
+            - Dictionary {"oklab": ..., "oklch": ...} (if return_type="all")
         """
+        valid_types = {"oklab", "oklch", "all"}
+        if return_type not in valid_types:
+            raise ValueError(f"Invalid return_type. Choose from {valid_types}")
+
         # 1. Parse Input & Normalize to 0-1
         if isinstance(color_input, str):
             r, g, b = OkColor._parse_hex(color_input)
@@ -116,8 +124,13 @@ class OkColor:
         if hue < 0:
             hue += 360
 
-        return {
-            "oklab": Oklab(l_ok, a_ok, b_ok),
-            "oklch": Oklch(l_ok, chroma, hue)
-        }
+        if return_type == "oklab":
+            return Oklab(l_ok, a_ok, b_ok)
+        elif return_type == "oklch":
+            return Oklch(l_ok, chroma, hue)
+        else:  # "all"
+            return {
+                "oklab": Oklab(l_ok, a_ok, b_ok),
+                "oklch": Oklch(l_ok, chroma, hue)
+            }
 

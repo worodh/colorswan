@@ -19,17 +19,19 @@ from colorswan import OkColor
 
 converter = OkColor()
 
-# Convert from Hex
-result = converter.convert("#FF0000") # Red
-print(result)
-# Output:
-# {
-#   'oklab': Oklab(L=0.6279..., a=0.2248..., b=0.1258...),
-#   'oklch': Oklch(L=0.6279..., C=0.2576..., h=29.233...)
-# }
+# Convert from Hex (returns Oklab object by default)
+result = converter.convert("#FF0000") 
+print(result.L) 
+# 0.6279...
 
-# Access properties
-print(result['oklab'].L)  # 0.6279...
+# Request Oklch explicitly
+oklch = converter.convert("#FF0000", return_type="oklch")
+print(oklch.h)
+# 29.23...
+
+# Request both (legacy behavior)
+all_results = converter.convert("#FF0000", return_type="all")
+print(all_results['oklab'].L)
 ```
 
 ### Tuple Input
@@ -39,7 +41,7 @@ You can also pass RGB tuples (0-255).
 ```python
 # Convert from RGB Tuple
 white = converter.convert((255, 255, 255))
-print(white['oklab'].L)
+print(white.L)
 # 1.0
 ```
 

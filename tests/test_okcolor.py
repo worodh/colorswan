@@ -6,36 +6,35 @@ class TestOkColor(unittest.TestCase):
         self.converter = OkColor()
 
     def test_srgb_white_conversion(self):
-        # White should be roughly L=1, a=0, b=0
+        # Default behavior: returns Oklab object directly
         result = self.converter.convert("#FFFFFF")
-        oklab = result['oklab']
         
-        self.assertAlmostEqual(oklab.L, 1.0, places=3)
-        self.assertAlmostEqual(oklab.a, 0.0, places=3)
-        self.assertAlmostEqual(oklab.b, 0.0, places=3)
+        self.assertAlmostEqual(result.L, 1.0, places=3)
+        self.assertAlmostEqual(result.a, 0.0, places=3)
+        self.assertAlmostEqual(result.b, 0.0, places=3)
 
     def test_srgb_black_conversion(self):
-        # Black should be L=0, a=0, b=0
+        # Default behavior: returns Oklab object directly
         result = self.converter.convert("#000000")
-        oklab = result['oklab']
         
-        self.assertAlmostEqual(oklab.L, 0.0, places=3)
-        self.assertAlmostEqual(oklab.a, 0.0, places=3)
-        self.assertAlmostEqual(oklab.b, 0.0, places=3)
+        self.assertAlmostEqual(result.L, 0.0, places=3)
+        self.assertAlmostEqual(result.a, 0.0, places=3)
+        self.assertAlmostEqual(result.b, 0.0, places=3)
 
-    def test_red_conversion_approx(self):
-        # Red #FF0000
-        # Expected approx: L=0.62796, a=0.22486, b=0.12585 (Source: bottosson.github.io)
-        result = self.converter.convert("#FF0000")
-        oklab = result['oklab']
+    def test_red_conversion_oklch(self):
+        # Requesting OKLCH explicitly
+        result = self.converter.convert("#FF0000", return_type="oklch")
         
-        self.assertAlmostEqual(oklab.L, 0.62796, places=2)
-        self.assertAlmostEqual(oklab.a, 0.22486, places=2)
-        self.assertAlmostEqual(oklab.b, 0.12585, places=2)
+        # Expected approx: L=0.62796, C=0.25768, h=29.2338
+        self.assertAlmostEqual(result.L, 0.62796, places=2)
+        self.assertAlmostEqual(result.C, 0.25768, places=2)
+        self.assertAlmostEqual(result.h, 29.23, places=2)
 
-    def test_tuple_input(self):
-        result = self.converter.convert((255, 255, 255))
+    def test_tuple_input_all_return(self):
+        # Requesting "all" returns dictionary
+        result = self.converter.convert((255, 255, 255), return_type="all")
         self.assertAlmostEqual(result['oklab'].L, 1.0, places=3)
+        self.assertAlmostEqual(result['oklch'].L, 1.0, places=3)
 
     def test_invalid_input(self):
         with self.assertRaises(ValueError):
